@@ -25,12 +25,16 @@ package mu
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func Start(handler http.Handler) {
+func Start(handler http.Handler) bool {
+	if _, ok := os.LookupEnv("LAMBDA_TASK_ROOT"); !ok {
+		return false
+	}
 	lambda.Start(func(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 		r := NewResponse()
 
@@ -43,4 +47,5 @@ func Start(handler http.Handler) {
 
 		return r.APIGatewayProxyResponse, nil
 	})
+	return true
 }
