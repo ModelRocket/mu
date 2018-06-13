@@ -35,7 +35,7 @@ import (
 // NewRequest returns a new *http.Request for the APIGatewayProxyRequest event
 func NewRequest(event events.APIGatewayProxyRequest) (request *http.Request, err error) {
 	// remove the resource root
-	path, _ := url.Parse(event.Path)
+	path, _ := url.Parse("/" + event.PathParameters["proxy"])
 	q := path.Query()
 	for k, v := range event.QueryStringParameters {
 		q.Set(k, v)
