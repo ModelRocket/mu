@@ -53,6 +53,8 @@ func NewRequest(event events.APIGatewayProxyRequest) (request *http.Request, err
 		return nil, err
 	}
 
+	request.RemoteAddr = event.RequestContext.Identity.SourceIP
+
 	// Add the headers to the request
 	for k, v := range event.Headers {
 		request.Header.Set(k, v)
