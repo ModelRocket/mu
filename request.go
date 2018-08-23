@@ -28,6 +28,7 @@ import (
 	"encoding/base64"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -54,6 +55,13 @@ func NewRequest(event events.APIGatewayProxyRequest) (request *http.Request, err
 	}
 
 	request.RemoteAddr = event.RequestContext.Identity.SourceIP
+
+	if xff, ok := event.Headers["X-Forwarded-For"]; ok {
+		sxff := strings.Split(xff, ", ")
+		if len(sxff) > 0 {
+			request.RemoteAddr = sxff[0]
+		}
+	}
 
 	// Add the headers to the request
 	for k, v := range event.Headers {

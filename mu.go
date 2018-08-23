@@ -24,6 +24,7 @@
 package mu
 
 import (
+	"errors"
 	"net/http"
 	"os"
 
@@ -31,10 +32,11 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func Start(handler http.Handler) bool {
+func Start(handler http.Handler) error {
 	if _, ok := os.LookupEnv("LAMBDA_TASK_ROOT"); !ok {
-		return false
+		return errors.New("lambda environment not available")
 	}
+
 	lambda.Start(func(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 		r := NewResponse()
 
@@ -47,5 +49,5 @@ func Start(handler http.Handler) bool {
 
 		return r.APIGatewayProxyResponse, nil
 	})
-	return true
+	return nil
 }
