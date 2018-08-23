@@ -53,7 +53,7 @@ func NewRequest(event events.APIGatewayProxyRequest) (request *http.Request, err
 	if err != nil {
 		return nil, err
 	}
-
+	request.RequestURI = path.RequestURI()
 	request.RemoteAddr = event.RequestContext.Identity.SourceIP
 
 	if xff, ok := event.Headers["X-Forwarded-For"]; ok {
